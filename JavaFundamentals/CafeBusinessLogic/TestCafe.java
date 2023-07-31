@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import java.util.List;
+
 public class TestCafe {
     public static void main(String[] args) {
         
@@ -35,5 +37,12 @@ public class TestCafe {
             appTest.addCustomer(customers);
             System.out.println("\n");
         }
+
+        appTest.printPriceChart("Coconut Shrimp", 3, 4);
+
+        ArrayList<Double> lineItems2 = new ArrayList<>(List.of( 3.5, 1.5, 4.0, 4.5 ));
+
+        appTest.displayMenu( menu, lineItems2 );
+
     }
 }
