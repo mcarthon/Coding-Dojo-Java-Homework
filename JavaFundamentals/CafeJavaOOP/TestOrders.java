@@ -8,19 +8,19 @@ public class TestOrders {
 
         Items item1 = new Items();
 
-        item1.name = "item1";
+        item1.setName( "item1" );
 
-        item1.price = 1.00;
+        item1.setPrice( 1.00 );
 
         Items item2 = new Items();
 
-        item2.name = "item2";
+        item2.setName( "item2" );
 
-        item2.price = 2.00;
+        item2.setPrice( 2.00 );
     
         // Order variables -- order1, order2 etc.
 
-        Orders order = new Orders();        
+        Orders order = new Orders( "Jeff Hardy" );        
     
         // Application Simulations
 
@@ -30,21 +30,15 @@ public class TestOrders {
 
         items.add( item2 );
 
-        order.items = items;
+        order.setItems( items );        
 
-        order.name = "Jeff Hardy";
+        order.setReady( false );
 
-        order.ready = false;
-
-        order.total = item1.price + item2.price;
+        order.setTotal();
 
         // Use this example code to test various orders' updates
 
-        System.out.printf("Name: %s\n", order.name);
-
-        System.out.printf("Total: $%.2f\n", order.total);
-
-        System.out.printf("Ready: %s\n", order.ready);
+        order.display();
 
     }
 
