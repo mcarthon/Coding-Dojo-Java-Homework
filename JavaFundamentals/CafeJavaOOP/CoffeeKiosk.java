@@ -8,7 +8,17 @@ public class CoffeeKiosk {
 
     CoffeeKiosk () {};
 
-    CoffeeKiosk addMenuItem ( Items item ) {
+    CoffeeKiosk addMenuItem ( ) {
+
+        Items item = new Items ();
+
+        String name = System.console().readLine( "Please enter the name for the item: " );
+
+        item.setName( name );
+
+        double price = Double.parseDouble( System.console().readLine( "Please enter the price for the item: " ) );
+
+        item.setPrice( price );
 
         menu.add( item );
 
@@ -60,8 +70,6 @@ public class CoffeeKiosk {
         return this;
 
     }
-
-    // CoffeeKiosk addMenu
 
     CoffeeKiosk displayMenu () {
 
