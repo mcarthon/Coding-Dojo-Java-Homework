@@ -61,6 +61,8 @@ public class CoffeeKiosk {
 
     }
 
+    // CoffeeKiosk addMenu
+
     CoffeeKiosk displayMenu () {
 
         for ( Items item: this.menu ) {
