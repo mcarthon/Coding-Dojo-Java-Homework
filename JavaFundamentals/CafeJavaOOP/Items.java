@@ -1,4 +1,6 @@
 public class Items {
+
+    private static int index = -1;
  
     private String name;
     
@@ -6,15 +8,21 @@ public class Items {
 
     Items () {
 
+        index ++;
+
     }
 
     Items ( String name ) {
+
+        index ++;
 
         this.name = name;
 
     }
 
     Items ( double price ) {
+
+        index ++;
 
         this.name = "Guest";
 
@@ -23,6 +31,8 @@ public class Items {
     }
 
     Items ( String name, double price ) {
+
+        index ++;
 
         this.name = name;
 
@@ -55,6 +65,12 @@ public class Items {
     public double getPrice () {
 
         return this.price;
+
+    }
+
+    static int getIndex () {
+
+        return index;
 
     }
 

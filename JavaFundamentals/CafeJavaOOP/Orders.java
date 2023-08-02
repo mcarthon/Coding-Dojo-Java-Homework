@@ -2,17 +2,35 @@ import java.util.ArrayList;
 
 public class Orders {
 
-    private String name;
+    private String name = "";
     
-    private double total;
+    private double total = 0;
 
-    private boolean ready;
+    private boolean ready = false;
 
-    private ArrayList<Items> items;
+    private ArrayList<Items> items = new ArrayList<Items>();
+
+    Orders () {};
 
     Orders ( String name ) {
 
         this.name = name;
+
+    }
+
+    Orders ( String name, boolean ready, ArrayList<Items> items ) {
+
+        this.name = name;
+
+        this.ready = ready;
+
+        this.items = items;
+
+        for ( Items item: this.items ) {
+
+            this.total += item.getPrice();
+
+        }
 
     }
 
