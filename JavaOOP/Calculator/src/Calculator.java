@@ -60,13 +60,38 @@ public class Calculator {
 			
 			this.result =  this.operandOne + this.operandTwo;
 			
+			this.operandOne = this.result;
+			
 			return this;
 			
 		case "-":
 			
 			this.result = this.operandOne - this.operandTwo;
 			
+			this.operandOne = this.result;
+			
 			return this;
+			
+		case "*":
+			
+			this.result = this.operandOne * this.operandTwo;
+			
+			this.operandOne = this.result;
+			
+			return this;
+			
+		case "/":
+			
+			if ( this.getOperandTwo() != 0 ) {
+				
+				this.result = this.operandOne / this.operandTwo;
+				
+				this.operandOne = this.result;
+				
+			}
+			
+			return this;
+			
 			
 		default:
 			
