@@ -31,3 +31,9 @@ spring.jpa.hibernate.ddl-auto=update
 
 -----------Adding a JS file to HTML-------------------
 <script type="text/javascript" src="/js/app.js"></script>
+
+-----------Add a CSS file ------------------------------------
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+
+--------------Add to JSP Pages------------------------------------
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core"%>
