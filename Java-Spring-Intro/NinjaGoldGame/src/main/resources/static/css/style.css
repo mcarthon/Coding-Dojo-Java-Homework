@@ -1,0 +1,15 @@
+@charset "ISO-8859-1";
+
+.form-container {
+	
+	display: flex;
+	
+}
+
+.location {
+	
+	border: 1px solid black;	
+	
+	margin: 10px;
+	
+}
