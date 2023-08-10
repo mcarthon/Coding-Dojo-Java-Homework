@@ -23,16 +23,24 @@
   <tbody>
     <c:forEach items="${allBurgers}" var="burger">
     <tr>			
-			<td>${burger.burgerName}</td>
+			<td><a href="/${burger.id}">${burger.burgerName}</a></td>
 			<td>${burger.restaurantName}</td>
 			<td>${burger.rating}</td>
 			<td>${burger.notes}</td>
+			<td>
+	
+				<form action="/delete/${burger.id}" method="post">
+					<input type="hidden" name="_method" value="delete"/>
+					<input type="submit" value="Delete"/>				
+				</form>
+
+			</td>
     </tr>
 	</c:forEach>
   </tbody>
 </table>
 
-	<form:form action="/newBurger" method="post" modelAttribute="newBurger">
+	<form:form action="/newBurger" method="post" modelAttribute="burger">
     <div class="form-group">
         <label>Burger Name: </label>
         <form:input path="burgerName" class="form-control" />

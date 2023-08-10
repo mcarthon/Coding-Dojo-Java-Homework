@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -82,6 +83,15 @@ public class Burger {
         this.createdAt = new Date();
         
     }
+	
+	 public void setId(Long id) {
+		this.id = id;
+	}
+
+	@PreUpdate
+	    protected void onUpdate(){
+	        this.updatedAt = new Date();
+	    }
 
 	public String getBurgerName() {
 		return burgerName;
