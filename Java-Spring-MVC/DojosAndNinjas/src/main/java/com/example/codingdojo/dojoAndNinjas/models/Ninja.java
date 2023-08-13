@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.example.codingdojo.dojoAndNinjas.models.Dojo;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,10 +41,10 @@ public class Ninja {
 	@NotNull(message = "Age must not be null. ")
 	@Min(value = 0, message = "Age must not be less than 0. ")
 	private int age;
-	
+
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "dojo_id")
-	private Dojo dojo_id;
+	private Dojo dojo;
 	
 	@Column(updatable=false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
@@ -63,7 +65,7 @@ public class Ninja {
 	
 	public Ninja () {}
 
-	public Ninja ( String firstName, String lastName, int age, Dojo dojo_id ) {
+	public Ninja ( String firstName, String lastName, int age, Dojo dojo ) {
 		
 		this.firstName = firstName;
 		
@@ -71,7 +73,7 @@ public class Ninja {
 		
 		this.age = age;
 		
-		this.dojo_id = dojo_id;
+		this.dojo = dojo;
 		
 	}
 
@@ -107,12 +109,12 @@ public class Ninja {
 		this.age = age;
 	}
 
-	public Dojo getDojo_id() {
-		return dojo_id;
+	public Dojo getDojo() {
+		return dojo;
 	}
 
-	public void setDojo_id(Dojo dojo_id) {
-		this.dojo_id = dojo_id;
+	public void setDojo(Dojo dojo) {
+		this.dojo = dojo;
 	}
 
 	public Date getCreatedAt() {
