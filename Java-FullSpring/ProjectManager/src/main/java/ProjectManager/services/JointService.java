@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import ProjectManager.models.Project;
+import ProjectManager.models.Task;
 import ProjectManager.models.User;
 import ProjectManager.repositories.ProjectRepository;
+import ProjectManager.repositories.TaskRepository;
 import ProjectManager.repositories.UserRepository;
 
 @Service
@@ -18,11 +20,15 @@ public class JointService {
 	
 	private final ProjectRepository projectRepository;
 	
-	public JointService ( UserRepository userRepository, ProjectRepository projectRepository ) {
+	private final TaskRepository taskRepository;
+	
+	public JointService ( UserRepository userRepository, ProjectRepository projectRepository, TaskRepository taskRepository ) {
 		
 		this.userRepository = userRepository;
 		
 		this.projectRepository = projectRepository;
+		
+		this.taskRepository = taskRepository;
 		
 	}
 	
@@ -54,11 +60,69 @@ public class JointService {
 		
 	}
 	
-	public JointService joinTeam ( User user, Project project ) {
+	public JointService leaveTeam ( Long userId, Long projectId ) {
 		
-		user.getProjects ().add ( project );
+		User user = this.findUserById ( userId );
 		
-		project.getUsers ().add ( user );
+		Project project = this.findProjectById ( projectId );
+		
+		List<Project> userProjects = user.getProjects ();
+		
+		userProjects.remove ( project );
+		
+		user.setProjects ( userProjects );
+		
+		this.userRepository.save ( user );
+		
+		List<User> projectUsers = project.getUsers ();
+		
+		projectUsers.remove ( user );
+		
+		project.setUsers ( projectUsers );
+		
+		this.projectRepository.save ( project );
+		
+		return this;
+		
+	}
+	
+	public JointService joinTeam ( Long userId, Long projectId ) {
+		
+		User user = this.findUserById ( userId );
+		
+		Project project = this.findProjectById ( projectId );
+		
+		if ( user.getProjects () != null ) {
+			
+			user.getProjects ().add ( project );
+			
+		}
+		
+		else {
+			
+			List<Project> userProjects = new ArrayList<Project> ();
+			
+			userProjects.add ( project );
+			
+			user.setProjects  ( userProjects );
+			
+		}
+		
+		if ( project.getUsers () != null ) {
+			
+			project.getUsers ().add ( user );
+			
+		}
+		
+		else {
+			
+			List<User> projectUsers = new ArrayList<User> ();
+			
+			projectUsers.add ( user );
+			
+			project.setUsers ( projectUsers );
+			
+		}
 		
 		this.userRepository.save ( user );
 		
@@ -123,6 +187,53 @@ public class JointService {
 		}
 		
 		return notMyProjects;
+		
+	}	
+	
+	public User addTeamLeadProject ( User user, Project project ) {
+		
+		if ( user.getTeamLeadProjects () != null ) {
+			
+			user.getTeamLeadProjects ().add ( project );
+			
+		}
+		
+		else {
+			
+			List<Project> teamLeadProjects = new ArrayList<Project> ();
+			
+			teamLeadProjects.add ( project );
+		}		
+		
+		return this.userRepository.save ( user );
+		
+	}
+	
+	public Project addTask ( Task task, Project project, User user ) {
+		
+		task.setAuthor ( user );
+		
+		task.setProject ( project );
+		
+		task = this.taskRepository.save ( task );
+		
+		if ( project.getTasks () != null ) {
+			
+			project.getTasks ().add ( task );
+			
+		}
+		
+		else {
+			
+			List<Task> tasks = new ArrayList<Task> ();
+			
+			tasks.add ( task );
+			
+			project.setTasks ( tasks );
+			
+		}			
+				
+		return this.projectRepository.save ( project );
 		
 	}
 	

@@ -62,6 +62,9 @@ public class User {
     		
     )
     private List<Project> projects;
+    
+    @OneToMany ( mappedBy = "author", fetch = FetchType.LAZY )
+    private List<Task> tasks;
         
 	@Column(updatable=false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
@@ -82,9 +85,9 @@ public class User {
     	
     	this.confirm = confirm;
     	
-    }
-    
-    @PrePersist
+    }        
+
+	@PrePersist
     protected void onCreate(){
     	
         this.createdAt = new Date();
@@ -142,6 +145,22 @@ public class User {
 
 	public void setProjects(List<Project> projects) {
 		this.projects = projects;
+	}
+	
+	public List<Project> getTeamLeadProjects() {
+		return teamLeadProjects;
+	}
+
+	public void setTeamLeadProjects(List<Project> teamLeadProjects) {
+		this.teamLeadProjects = teamLeadProjects;
+	}
+
+	public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 
 	public Date getCreatedAt() {

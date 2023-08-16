@@ -34,7 +34,15 @@
 			<td><a href="/projects/${project.id}">${project.title}</a></td>
 			<td>${project.teamLead.name}</td>
 			<td><fmt:formatDate pattern = "MMMM dd" value = "${project.dueDate}" /></td>
-			<td><a>Join Team</a></td>
+			<td>
+			
+			<form action="/projects/join/${user_id}/${project.id}" method="post">
+			
+				<input type="submit" value="Join Team"/>
+			
+			</form>
+			
+			</td>
     </tr>
 	</c:forEach>
   </tbody>
@@ -55,8 +63,26 @@
     <tr>
 			<td><a href="/projects/${project.id}">${project.title}</a></td>
 			<td>${project.teamLead.name}</td>
-			<td><fmt:formatDate pattern = "M-dd" value = "${project.dueDate}" /></td>
-			<td>Actions</td>
+			<td><fmt:formatDate pattern = "MMMMM dd" value = "${project.dueDate}" /></td>
+			
+			<c:if test="${user_id == project.teamLead.id}">
+			<td><a href="/projects/edit/${project.id}">edit</a></td>
+			</c:if>
+			
+			<c:if test="${user_id != project.teamLead.id}">
+			<td>
+			
+			<form action="/projects/leave/${user_id}/${project.id}" method="post">
+			
+				<input type="submit" value="Leave Team"/>
+			
+			</form>
+			
+			</td>
+			</c:if>
+			
+			
+			
     </tr>
 	</c:forEach>
   </tbody>

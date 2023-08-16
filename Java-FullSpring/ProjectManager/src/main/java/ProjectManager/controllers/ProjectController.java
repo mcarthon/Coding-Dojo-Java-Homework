@@ -1,5 +1,7 @@
 package ProjectManager.controllers;
 
+import java.text.SimpleDateFormat;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import ProjectManager.models.Project;
+import ProjectManager.models.Task;
+import ProjectManager.models.User;
 import ProjectManager.services.JointService;
 import ProjectManager.services.ProjectService;
 import jakarta.servlet.http.HttpSession;
@@ -71,13 +75,17 @@ public class ProjectController {
 			
 		}
 		
-		Long id = (Long) session.getAttribute ( "user_id" );
+		Long userId = (Long) session.getAttribute ( "user_id" );
 		
-		newProject.setTeamLead ( this.jointService.findUserById ( id ) );
+		User teamLead = this.jointService.findUserById ( userId );
 		
-		this.projectService.addProject ( newProject );
+		newProject.setTeamLead ( teamLead );
 		
-		this.jointService.joinTeam ( this.jointService.findUserById( id ), newProject );
+		this.jointService.addTeamLeadProject ( teamLead, newProject );
+		
+		Project savedProject = this.projectService.addProject ( newProject );
+		
+		this.jointService.joinTeam ( userId, savedProject.getId() );
 		
 		return "redirect:/projects";
 		
@@ -102,7 +110,15 @@ public class ProjectController {
 		
 		if ( session.getAttribute ( "user_id" ) != null ) {
 			
-			model.addAttribute ( "project", this.projectService.findProjectById ( id ) );
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Project projectNewDate = this.projectService.findProjectById ( id );
+			
+			String strDate = date.format(projectNewDate.getDueDate () );			
+			
+			model.addAttribute ( "project", projectNewDate );
+			
+			model.addAttribute ( "newDueDate", strDate );
 			
 			return "editPage.jsp";
 						
@@ -125,7 +141,7 @@ public class ProjectController {
 			
 			for (  int i = 0; i < bindingResult.getFieldErrors ( ).size (); ++ i ) {
 				
-				errors += bindingResult.getFieldErrors ( ).get (i).getDefaultMessage () + "\n";
+				errors += bindingResult.getFieldErrors ( ).get (i).getDefaultMessage () + "\n\n";
 				
 			}
 			
@@ -139,16 +155,74 @@ public class ProjectController {
 		
 		this.projectService.updateProject ( project );
 		
-		return "redirect:/projects{id}";
+		return "redirect:/projects/{id}";
 		
 	}
 	
 	@DeleteMapping("/projects/{id}")
 	public String deleteProject ( @PathVariable ( "id" ) Long id ) {
 		
+		Project project = this.projectService.findProjectById ( id );
+		
+		project.setTeamLead ( null );
+		
+		project.setUsers ( null );
+		
+		project.setTasks ( null );
+		
 		this.projectService.deleteProject ( id );
 		
 		return "redirect:/projects";
+		
+	}
+	
+	@PostMapping("/projects/join/{user_id}/{project_id}")
+	public String joinTeam ( @PathVariable ( "user_id" ) Long userId, @PathVariable ( "project_id" ) Long projectId ) {
+		
+		this.jointService.joinTeam ( userId, projectId );
+		
+		return "redirect:/projects";
+		
+	}
+	
+	@PostMapping("/projects/leave/{user_id}/{project_id}")
+	public String leaveTeam ( @PathVariable ( "user_id" ) Long userId, @PathVariable ( "project_id" ) Long projectId ) {
+		
+		this.jointService.leaveTeam ( userId, projectId );
+		
+		return "redirect:/projects";
+		
+	}
+	
+	@GetMapping("/projects/{projectId}/tasks")
+	public String showTasksPage ( @PathVariable ("projectId") Long projectId, HttpSession session, Model model, @ModelAttribute ( "task" ) Task task ) {
+		
+		if ( session.getAttribute ( "user_id" ) != null ) {
+			
+			model.addAttribute ( "project", this.projectService.findProjectById ( projectId ) );
+			
+			return "tasks.jsp";
+			
+		}
+		
+		return "redirect:/";
+		
+	}
+	
+	@PostMapping("/projects/{projectId}/tasks")
+	public String addTask ( @Valid @ModelAttribute ( "task" ) Task task, BindingResult bindingResult, @PathVariable ( "projectId" ) Long projectId, HttpSession session ) {
+		
+		if ( bindingResult.hasErrors () ) {
+			
+			return "tasks.jsp";
+			
+		}
+		
+		Long userId = (Long) session.getAttribute ( "user_id" );
+		
+		this.jointService.addTask ( task, this.projectService.findProjectById ( projectId ), this.jointService.findUserById ( userId ) );
+		
+		return "redirect:/projects/{projectId}/tasks";
 		
 	}
 	

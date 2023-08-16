@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -60,6 +61,9 @@ public class Project {
     )
     private List<User> users;
 	
+	@OneToMany ( mappedBy = "project", fetch = FetchType.LAZY )
+	private List<Task> tasks;	
+
 	@Column(updatable=false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date createdAt;
@@ -139,6 +143,14 @@ public class Project {
 
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+	
+	public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 
 	public Date getCreatedAt() {
