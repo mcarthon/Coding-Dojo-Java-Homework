@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import ProjectManager.models.Project;
+import ProjectManager.services.JointService;
 import ProjectManager.services.ProjectService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -20,10 +21,13 @@ public class ProjectController {
 
 	private final ProjectService projectService;
 	
-	public ProjectController ( ProjectService projectService ) {
+	private final JointService jointService;
+	
+	public ProjectController ( ProjectService projectService, JointService jointService ) {
 		
 		this.projectService = projectService;
 		
+		this.jointService = jointService;
 	}
 	
 	@GetMapping("/projects")
@@ -31,7 +35,11 @@ public class ProjectController {
 		
 		if ( session.getAttribute ( "user_id" ) != null ) {
 			
-			model.addAttribute ( "allProjects", this.projectService.findAllProjects () );
+			Long id = (Long) session.getAttribute ( "user_id" );
+			
+			model.addAttribute ( "myProjects", this.jointService.myProjects ( id ) );
+			
+			model.addAttribute ( "notMyProjects", this.jointService.notMyProjects ( id ) );
 			
 			return "dashboard.jsp";			
 			
@@ -55,7 +63,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/projects") 
-	public String addNewProject ( Project project, @Valid @ModelAttribute ( "newProject" ) Project newProject, BindingResult bindingResult, Model model ) {
+	public String addNewProject ( Project project, @Valid @ModelAttribute ( "newProject" ) Project newProject, BindingResult bindingResult, Model model, HttpSession session ) {
 		
 		if ( bindingResult.hasErrors () ) {
 			
@@ -63,7 +71,13 @@ public class ProjectController {
 			
 		}
 		
+		Long id = (Long) session.getAttribute ( "user_id" );
+		
+		newProject.setTeamLead ( this.jointService.findUserById ( id ) );
+		
 		this.projectService.addProject ( newProject );
+		
+		this.jointService.joinTeam ( this.jointService.findUserById( id ), newProject );
 		
 		return "redirect:/projects";
 		

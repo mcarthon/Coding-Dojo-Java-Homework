@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import ProjectManager.models.Project;
-import ProjectManager.models.User;
 import ProjectManager.repositories.ProjectRepository;
 
 @Service
@@ -14,13 +13,9 @@ public class ProjectService {
 
 	private final ProjectRepository projectRepository;
 	
-	private final UserService userService;
-	
-	public ProjectService ( ProjectRepository projectRepository, UserService userService ) {
+	public ProjectService ( ProjectRepository projectRepository ) {
 		
 		this.projectRepository = projectRepository;
-		
-		this.userService = userService;
 		
 	}
 	
@@ -59,18 +54,6 @@ public class ProjectService {
 	public void deleteProject ( Long id ) {
 		
 		this.projectRepository.deleteById ( id );
-		
-	}
-	
-	public Project addUser ( Long projectId, Long userId ) {
-		
-		Project project = this.findProjectById ( projectId );
-		
-		User user = this.userService.findUserById ( userId );
-		
-		project.getUsers ().add ( user );
-		
-		return this.projectRepository.save ( project );
 		
 	}
 	

@@ -14,10 +14,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -36,8 +39,14 @@ public class Project {
     @Size(min=1, max=300, message="Description must be between 1 and 128 characters")
     private String description;
 	
-	@DateTimeFormat(pattern="mm/dd/yyy")
+	@NotNull ( message = "Due Date must not be null. " )
+	@Future ( message = "Due date must be in the future. " )
+	@DateTimeFormat(pattern="yyyy-MM-dd")
     private Date dueDate;
+	
+	@ManyToOne ( fetch = FetchType.LAZY )
+	@JoinColumn ( name = "teamLead" )
+    private User teamLead;
 	
 	@ManyToMany ( fetch = FetchType.LAZY )
     @JoinTable (
@@ -114,6 +123,14 @@ public class Project {
 
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
+	}
+
+	public User getTeamLead() {
+		return teamLead;
+	}
+
+	public void setTeamLead(User teamLead) {
+		this.teamLead = teamLead;
 	}
 
 	public List<User> getUsers() {

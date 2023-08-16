@@ -52,7 +52,7 @@ public class UserController {
 		
 		session.setAttribute ( "name", registeredUser.getName() );
 		
-	    return "redirect:/books";
+	    return "redirect:/projects";
 		
 	}
 	
@@ -73,7 +73,7 @@ public class UserController {
 		
 		session.setAttribute ( "name", loggedInUser.getName() );
  
-		return "redirect:/books";
+		return "redirect:/projects";
      
 	}
 	

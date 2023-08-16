@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import ProjectManager.models.LoginUser;
-import ProjectManager.models.Project;
 import ProjectManager.models.User;
 import ProjectManager.repositories.UserRepository;
 
@@ -17,13 +16,9 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	
-	private final ProjectService projectService;
-	
-	public UserService ( UserRepository userRepository, ProjectService projectService ) {
+	public UserService ( UserRepository userRepository ) {
 		
 		this.userRepository = userRepository;
-		
-		this.projectService = projectService;
 		
 	}
 	
@@ -101,18 +96,57 @@ public class UserService {
 		
 		return null;
 		
-	}
-	
-	public User addProject ( Long userId, Long projectId ) {
-		
-		User user = this.findUserById ( userId );
-		
-		Project project = this.projectService.findProjectById ( projectId );
-		
-		user.getProjects ().add ( project );
-		
-		return this.userRepository.save ( user );
-		
-	}
+	}		
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
