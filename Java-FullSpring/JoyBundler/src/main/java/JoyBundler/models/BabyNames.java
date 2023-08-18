@@ -115,7 +115,7 @@ public class BabyNames {
 	}
 
 	public String getGender() {
-		return gender;
+		return this.gender;
 	}
 
 	public void setGender(String gender) {

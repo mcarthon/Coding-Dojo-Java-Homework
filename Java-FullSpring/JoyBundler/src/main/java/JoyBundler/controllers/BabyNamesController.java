@@ -17,7 +17,6 @@ import JoyBundler.models.BabyNames;
 import JoyBundler.models.User;
 import JoyBundler.services.BabyNamesService;
 import JoyBundler.services.JointService;
-import JoyBundler.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -28,17 +27,11 @@ public class BabyNamesController {
 	
 	private final JointService jointService;
 	
-	private final UserService userService;
-	
-	public BabyNamesController ( BabyNamesService babynamesService, 
-			JointService jointService,
-			UserService userService ) {
+	public BabyNamesController ( BabyNamesService babynamesService, JointService jointService ) {
 		
 		this.babynamesService = babynamesService;
 		
 		this.jointService = jointService;
-		
-		this.userService = userService;
 		
 	}
 	
@@ -50,8 +43,6 @@ public class BabyNamesController {
 			model.addAttribute ( "allBabyNames", this.babynamesService.findAllNames () );
 			
 			Long userId = (Long) session.getAttribute ( "user_id" );
-			
-			System.out.println(userId);
 			
 			model.addAttribute ( "currentUser", this.jointService.findUserById ( userId ) );
 			
@@ -124,28 +115,7 @@ public class BabyNamesController {
 		
 		newName.setUsers ( users );
 		
-		BabyNames savedNewName = this.babynamesService.create ( newName, bindingResult);
-//		
-//		if ( currentUser.getBabynames () != null ) {
-//			
-//			currentUser.getBabynames ().add ( savedNewName );
-//			
-//		}
-//		
-//		else {
-//			
-//			List<BabyNames> names = new ArrayList<BabyNames>();
-//			
-//			names.add( savedNewName );
-//			
-//			currentUser.setBabynames ( names );
-//			
-//			
-//			
-//		}
-//		
-//		this.userService.update ( currentUser);
-		
+		this.babynamesService.create ( newName, bindingResult);		
 		
 		if ( bindingResult.hasErrors () ) {
 			
@@ -178,13 +148,15 @@ public class BabyNamesController {
 	
 	@GetMapping ( "/names/edit/{nameId}" )
 	public String editPage ( @PathVariable ( "nameId" ) Long nameId, 
-			Model model, 
-//			@ModelAttribute ( "updateBabyname" ) BabyNames updateBabyname,
+			@ModelAttribute ( "updateBabyName" ) BabyNames updateBabyName,
+			Model model,
 			HttpSession session ) {
 		
 		if ( session.getAttribute ( "user_id" ) != null ) {
 			
-			model.addAttribute ( "babyname", this.babynamesService.findOneName ( nameId ) );
+			BabyNames babyname = this.babynamesService.findOneName ( nameId );
+			
+			model.addAttribute ( "babyname", babyname );
 			
 			return "edit.jsp";
 			
@@ -195,22 +167,22 @@ public class BabyNamesController {
 	}
 	
 	@PatchMapping ( "/names/edit/{nameId}" )
-	public String addEdits ( @Valid @ModelAttribute ( "babyname" ) BabyNames updateBabyname, 
-			BindingResult bindingResult,
-			@PathVariable ( "nameId" ) Long nameId,
+	public String addEdits ( @PathVariable ( "nameId" ) Long nameId,
+			@Valid @ModelAttribute ( "updateBabyName" ) BabyNames updateBabyName, 
+			BindingResult bindingResult,			
 			Model model) {
 		
 		if ( bindingResult.hasErrors () ) {
+			
+			model.addAttribute ( "babyname", this.babynamesService.findOneName ( nameId ) );
 			
 			return "edit.jsp";
 			
 		}		
 		
-		this.babynamesService.update ( updateBabyname );
+		this.babynamesService.update ( updateBabyName );
 		
-		System.out.println("id after edit " + updateBabyname.getId());
-		
-		return "redirect:/names";
+		return "redirect:/names/{nameId}";
 		
 	}
 	

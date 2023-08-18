@@ -40,8 +40,6 @@ public class UserController {
 		
 		User registeredUser =  this.userService.register ( userRegister, bindingResult );
 		
-		System.out.println("Registered user: " + registeredUser);
-		
 		if ( bindingResult.hasErrors() ) {
 			
 			model.addAttribute ( "userLogin", new LoginUser () );
@@ -63,8 +61,6 @@ public class UserController {
  
 		User loggedInUser = this.userService.login ( userLogin, bindingResult );
 		
-		System.out.println("Logged in user: " + loggedInUser);
-		
 		if( bindingResult.hasErrors() ) {
 			
 			model.addAttribute ( "userRegister", new User () );
@@ -76,8 +72,6 @@ public class UserController {
 		session.setAttribute ( "user_id", loggedInUser.getId () );
 		
 		Long id = (Long) session.getAttribute ( "user_id" );
-		
-		System.out.println("user id: " + id );
 		
 		session.setAttribute ( "name", loggedInUser.getName() );
  

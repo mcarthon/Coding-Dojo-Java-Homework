@@ -16,42 +16,91 @@
 	
 	<a href="/logout">log out</a>
 	
-	<h3>Baby Names</h3>
-	
-	<c:forEach items="${allBabyNames}" var ="babyname" >
-	
-		<c:if test="${!babyname.getUsers ().contains ( currentUser ) }">
-		
-			<form action="/names/upvote/${user_id}/${babyname.id}" method="post"> 
-			
-			<input type="submit" value="upvote"/>
-		
-			</form>
-		
-		</c:if>													
-		
-		<c:if test="${babyname.getUsers ().contains ( currentUser ) }">
-		
-			<form action="/names/downvote/${user_id}/${babyname.id}" method="post"> 
-			
-			<input type="submit" value="downvote"/>
-		
-			</form>
-		
-		</c:if>
-		
-		<p><a href="/names/${ babyname.id }"><c:out value="${babyname.name}" /></a></p>
-		
-		<p><c:out value="${babyname.gender}" /></p>
-		
-		<p><c:out value="Origin: ${babyname.origin}" /></p>
-		
-		<p><c:out value="Votes: ${babyname.users.size()}" /></p>
-		
-	</c:forEach>
-	
 	<a href="/names/new" ><button>new name</button></a>
 	
+	<h3>Baby Names</h3>
+	
+	<table>
+  		
+  		<thead>
+    	
+    		<tr>
+      	
+      			<th>Vote</th>
+      			
+      			<th>Name</th>
+      			
+      			<th>Gender</th>
+      			
+      			<th>Origin</th>
+      			
+      			<th>Votes</th>
+		
+			</tr>
+  
+  		</thead>
+  
+  		<tbody>
+  		
+  		<c:forEach items="${allBabyNames}" var ="babyname" >
+    		
+    		<tr>
+      
+      			<td>
+      			
+      				<c:if test="${!babyname.getUsers ().contains ( currentUser ) }">
+		
+						<form action="/names/upvote/${user_id}/${babyname.id}" method="post"> 
+			
+						<input type="submit" value="upvote"/>
+		
+						</form>
+		
+					</c:if>													
+		
+					<c:if test="${babyname.getUsers ().contains ( currentUser ) }">
+		
+						<form action="/names/downvote/${user_id}/${babyname.id}" method="post"> 
+			
+						<input type="submit" value="downvote"/>
+		
+						</form>
+		
+					</c:if>
+		
+				</td>
+     
+      			<td>
+      			
+      				<a href="/names/${ babyname.id }"><c:out value="${babyname.name}" /></a>
+      			
+      			</td>
+      			
+      			<td>
+      			
+      				<c:out value="${babyname.gender}" />
+      			
+      			</td>
+      			
+      			<td>
+      			
+      				<c:out value="${babyname.origin}" />		
+      			
+      			</td>
+      			
+      			<td>
+      			
+      				<c:out value="${babyname.users.size()}" />		
+      			
+      			</td>
+    
+    		</tr>
+    		
+    	</c:forEach>
+  
+  		</tbody>
 
+	</table>
+		
 </body>
 </html>

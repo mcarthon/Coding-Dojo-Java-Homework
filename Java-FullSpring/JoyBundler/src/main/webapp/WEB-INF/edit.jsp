@@ -17,21 +17,22 @@
 
 	<h1><c:out value="Change ${babyname.name}"/></h1>
 	
-	<form:form action="/names/edit/${babyname.id}" method="post" modelAttribute="babyname">
-	<input type="hidden" name="_method" value="patch"/>
+	<form:form action="/names/edit/${babyname.id}" method="patch" modelAttribute="updateBabyName">	
+	
+	<form:hidden path="id" value="${babyname.id}" />
     <div class="form-group">
         <form:hidden path="name" value="${babyname.name}" class="form-control" />
     </div>
     
     <div class="form-group">
         <label>Typical Gender: </label>
-        <form:select type="text" path="gender" class="form-control" value="${babyname.gender}">
+        <form:select path="gender" class="form-control" >
         
-        	<form:option value="Male">Male</form:option>
+        	<form:option value="Male" selected="${babyname.gender == 'Male'}" >Male</form:option>
         	
-        	<form:option value="Female">Female</form:option>
+        	<form:option value="Female" selected="${babyname.gender == 'Female'}">Female</form:option>
         	
-        	<form:option value="Neutral">Neutral</form:option>
+        	<form:option value="Neutral" selected="${babyname.gender == 'Neutral'}" >Neutral</form:option>
         
         </form:select>
         <form:errors path="gender" class="text-danger" />
